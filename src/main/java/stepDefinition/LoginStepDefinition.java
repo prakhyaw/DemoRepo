@@ -103,7 +103,6 @@ public class LoginStepDefinition {
 		
 	
 		driver.switchTo().window(parentwindow);
-		System.out.println(driver.getCurrentUrl());
 		driver.findElement(By.xpath("//input[@name='receive_email' and @value='N']")).click();
 		driver.findElement(By.id("fieldId_birthday")).sendKeys("02-Jan-1992");
 		
