@@ -101,7 +101,7 @@ public class LoginStepDefinition {
 		}
 		
 		
-		Thread.sleep(3000);
+	
 		driver.switchTo().window(parentwindow);
 		System.out.println(driver.getCurrentUrl());
 		driver.findElement(By.xpath("//input[@name='receive_email' and @value='N']")).click();
