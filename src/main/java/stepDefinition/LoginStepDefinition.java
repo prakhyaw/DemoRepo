@@ -72,8 +72,7 @@ public class LoginStepDefinition {
 	@Then("^user fills the form and saves$")
 	public void user_fills_the_form_and_saves() throws InterruptedException{
 		Select title = new Select(driver.findElement(By.name("title")));
-		title.selectByVisibleText("Mr.");
-		
+		title.selectByVisibleText("Mr.");		
 		String firstname = "first name";
 		driver.findElement(By.id("first_name")).sendKeys(firstname);
 		String lastname = "surname";
@@ -83,34 +82,55 @@ public class LoginStepDefinition {
 		Select suffix = new Select(driver.findElement(By.name("suffix")));
 		suffix.selectByVisibleText("II");		
 		
-		driver.findElement(By.xpath("//input[@name='contact_lookup_ref']//following-sibling::input[@value='Lookup']")).click();
-		
-		Set<String> windows = driver.getWindowHandles();
-		
+		driver.findElement(By.xpath("//input[@name='contact_lookup_ref']//following-sibling::input[@value='Lookup']")).click();		
+		Set<String> windows = driver.getWindowHandles();		
 		Iterator<String> it = windows.iterator();
-		String parentwindow = it.next();
-		
+		String parentwindow = it.next();		
 		while(it.hasNext()) {
 			String childwindow = it.next();
 			driver.switchTo().window(childwindow);
 			driver.manage().window().maximize();
 			driver.findElement(By.id("search")).sendKeys("test");
-			driver.findElement(By.xpath("//input[@type='submit']")).click();
-			
+			driver.findElement(By.xpath("//input[@type='submit']")).click();			
 			driver.findElement(By.xpath("//a[contains(text(),'test1 test1')]")).click();
+		}		
+	
+		driver.switchTo().window(parentwindow);
+		driver.switchTo().frame("mainpanel");
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//input[@name='receive_email' and @value='N']")).click();
+		
+		driver.findElement(By.id("f_trigger_c_birthday")).click();
+		
+		driver.findElement(By.xpath("//img[@id='f_trigger_c_birthday']//ancestor::body//child::div["
+				+ "@class='calendar' and @style='position: absolute; display: block; left: 803px; top: 369px;']"));
+		
+		String currentdate = driver.findElement(By.xpath("//td[@colspan='6' and @class='title']")).getText();
+		String reqdate = "2";
+		String reqmonth = "January";
+		String reqyear = "1992";
+		
+		String a[] = currentdate.split(", ");
+		String currentmonth = a[0];
+		String currentyear = a[1];
+		System.out.println(currentdate +","+ currentmonth +","+ currentyear);
+		
+		int loop = Integer.parseInt(currentyear) - Integer.parseInt(reqyear);
+		for(int i = 0; i < loop; i++)
+		{
+			driver.findElement(By.xpath("//tr[@class='headrow']//td[1]//div")).click();
 		}
 		
 		
-	
-		driver.switchTo().window(parentwindow);
-		driver.findElement(By.xpath("//input[@name='receive_email' and @value='N']")).click();
-		driver.findElement(By.id("fieldId_birthday")).sendKeys("02-Jan-1992");
+		Thread.sleep(3000);
 		
-		driver.findElement(By.xpath("//input[@value='Load From Company']//following-sibling::input[@type='submit' and @value='Save']")).submit();
+		
+		//driver.findElement(By.xpath("//input[@value='Load From Company']//following-sibling::input[@type='submit' and @value='Save']")).submit();
+		System.out.println("Submitted form");
 	}
 
 	
-	@Then("^user verifies the contact$")
+	/*@Then("^user verifies the contact$")
 	public void user_verifies_the_contact() {
 		user_is_on_Contacts_page();
 		List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"vContactsForm\"]/table/tbody/tr/td[2]/a"));
@@ -130,7 +150,7 @@ public class LoginStepDefinition {
 		//*[@id="vContactsForm"]/table/tbody/tr[11]/td[2]/a
 		
 	}
-	
+	*/
 	
 	@Then("^close the browser$")
 	public void close_the_browser(){
