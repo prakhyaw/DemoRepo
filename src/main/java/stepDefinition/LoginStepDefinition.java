@@ -121,9 +121,17 @@ public class LoginStepDefinition {
 			driver.findElement(By.xpath("//tr[@class='headrow']//td[1]//div")).click();
 		}
 		
+		List<WebElement> calenderrows = driver.findElements(By.xpath("//tr[@class='headrow']//td[1]//div//ancestor::table//tbody//tr"));
+		Iterator<WebElement> itr = calenderrows.iterator();
+		int rowcount = 0;
+		while(itr.hasNext()) {
+			rowcount++;
+		}
+		System.out.println(rowcount);
 		
-		Thread.sleep(3000);
 		
+		
+		Thread.sleep(3000);	
 		
 		//driver.findElement(By.xpath("//input[@value='Load From Company']//following-sibling::input[@type='submit' and @value='Save']")).submit();
 		System.out.println("Submitted form");
