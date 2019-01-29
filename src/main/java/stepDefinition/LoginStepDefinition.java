@@ -44,7 +44,8 @@ public class LoginStepDefinition {
 
 	@Then("^user clicks on login button$")
 	public void user_clicks_on_login_button() {
-		driver.findElement(By.xpath("//*[@id=\"loginForm\"]/div/div/input")).click();;
+		driver.findElement(By.name("password")).submit();
+		//driver.findElement(By.xpath("//*[@id=\"loginForm\"]/div/div/input")).click();;
 	}
 
 	@Then("^user is on home page$")
@@ -74,9 +75,9 @@ public class LoginStepDefinition {
 	public void user_fills_the_form_and_saves() throws InterruptedException{
 		Select title = new Select(driver.findElement(By.name("title")));
 		title.selectByVisibleText("Mr.");		
-		String firstname = "firstname";
+		String firstname = "firstname1";
 		driver.findElement(By.id("first_name")).sendKeys(firstname);
-		String lastname = "surname";
+		String lastname = "surname1";
 		driver.findElement(By.id("surname")).sendKeys(lastname);
 		name = firstname+" "+lastname;
 		
@@ -171,11 +172,12 @@ public class LoginStepDefinition {
 		}
 		System.out.println(rowcount);
 		
-		for(int i = 4; i < rowcount; i++)
+		for(int i = 4; i < rowcount-1; i++)
 		{
-			if(name.equals(driver.findElement(By.xpath("//[@id='vContactsForm']//tr["+i+"]//td[2]//a[contains(text(),'"+name+"')]")).getText()))
+			String contactname = driver.findElement(By.xpath("//form[@id='vContactsForm']//tr["+i+"]//td[2]//a")).getText();
+			if(name.equals(contactname))
 			{
-				System.out.println(name +"contact added successfully");
+				System.out.println(name +": contact added successfully");
 			}
 		}
 		
