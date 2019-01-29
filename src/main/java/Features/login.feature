@@ -11,5 +11,5 @@ Then user is on home page
 Given user is on Contacts page
 Then user clicks on New Contacts link
 Then user fills the form and saves
-# Then user verifies the contact
+Then user verifies the contact
 Then close the browser

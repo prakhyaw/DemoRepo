@@ -19,6 +19,7 @@ import junit.framework.Assert;
 public class LoginStepDefinition {
 	
 	WebDriver driver;
+	String name;
 	
 	@Given("^user is already on login page$")
 	public void user_is_already_on_login_page() {
@@ -73,11 +74,11 @@ public class LoginStepDefinition {
 	public void user_fills_the_form_and_saves() throws InterruptedException{
 		Select title = new Select(driver.findElement(By.name("title")));
 		title.selectByVisibleText("Mr.");		
-		String firstname = "first name";
+		String firstname = "firstname";
 		driver.findElement(By.id("first_name")).sendKeys(firstname);
 		String lastname = "surname";
 		driver.findElement(By.id("surname")).sendKeys(lastname);
-		String name = firstname+lastname;
+		name = firstname+" "+lastname;
 		
 		Select suffix = new Select(driver.findElement(By.name("suffix")));
 		suffix.selectByVisibleText("II");		
@@ -122,32 +123,63 @@ public class LoginStepDefinition {
 		}
 		
 		List<WebElement> calenderrows = driver.findElements(By.xpath("//tr[@class='headrow']//td[1]//div//ancestor::table//tbody//tr"));
+		System.out.println("rows listed");
 		Iterator<WebElement> itr = calenderrows.iterator();
 		int rowcount = 0;
 		while(itr.hasNext()) {
 			rowcount++;
+			itr.next();
 		}
 		System.out.println(rowcount);
 		
+		List<WebElement> calendercolumns = driver.findElements(By.xpath("//tr[@class='headrow']//td[1]//div//ancestor::table//tbody//tr[1]"));
+		Iterator<WebElement> itrc = calenderrows.iterator();
+		int columncount = 0;
+		while(itrc.hasNext()) {
+			columncount++;
+			itrc.next();
+		}
+		System.out.println(columncount);
 		
+		for(int i = 1 ; i < rowcount; i++)
+		{
+			for(int j = 1; j <= columncount; j++)
+			{
+				String date = driver.findElement(By.xpath("//tr[@class='headrow']//td[1]//div//ancestor::table//tbody//tr["+i+"]//td["+j+"]")).getText();
+				if(date.equals(reqdate))
+				{
+					driver.findElement(By.xpath("//tr[@class='headrow']//td[1]//div//ancestor::table//tbody//tr["+i+"]//td["+j+"]")).click();
+				}
+			}
+		}
 		
-		Thread.sleep(3000);	
-		
-		//driver.findElement(By.xpath("//input[@value='Load From Company']//following-sibling::input[@type='submit' and @value='Save']")).submit();
+		driver.findElement(By.xpath("//input[@value='Load From Company']//following-sibling::input[@type='submit' and @value='Save']")).submit();
 		System.out.println("Submitted form");
+		Thread.sleep(3000);
 	}
 
 	
-	/*@Then("^user verifies the contact$")
+	@Then("^user verifies the contact$")
 	public void user_verifies_the_contact() {
-		user_is_on_Contacts_page();
-		List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"vContactsForm\"]/table/tbody/tr/td[2]/a"));
+		driver.findElement(By.xpath("//a[contains(text(),'Contacts')]")).click();
+		List<WebElement> rows = driver.findElements(By.xpath("//form[@id='vContactsForm']//tr"));
 		Iterator<WebElement> itr = rows.iterator();
 		int rowcount = 0;
 		while(itr.hasNext()) {
 			rowcount++;
+			itr.next();
 		}
 		System.out.println(rowcount);
+		
+		for(int i = 4; i < rowcount; i++)
+		{
+			if(name.equals(driver.findElement(By.xpath("//[@id='vContactsForm']//tr["+i+"]//td[2]//a[contains(text(),'"+name+"')]")).getText()))
+			{
+				System.out.println(name +"contact added successfully");
+			}
+		}
+		
+		
 		
 		
 		
@@ -158,7 +190,6 @@ public class LoginStepDefinition {
 		//*[@id="vContactsForm"]/table/tbody/tr[11]/td[2]/a
 		
 	}
-	*/
 	
 	@Then("^close the browser$")
 	public void close_the_browser(){
